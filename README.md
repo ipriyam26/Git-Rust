@@ -1,4 +1,4 @@
-![progress-banner](https://codecrafters.io/landing/images/default_progress_banners/git.png)
+[![progress-banner](https://app.codecrafters.io/progress/git/c4e972da-37c3-4cce-9ece-6ea99cfe9238)](https://app.codecrafters.io/users/ipriyam26)
 
 This is a starting point for Rust solutions to the
 ["Build Your Own Git" Challenge](https://codecrafters.io/challenges/git).
