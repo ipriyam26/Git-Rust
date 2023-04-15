@@ -86,23 +86,26 @@ fn main() {
             let hash = hasher.finalize();
             let hex_result = format!("{:#04x}", hash);
 
-            let (dir, filename) = hex_result.split_at(2);
-            let object_dir = objects_dir().join(dir);
-            let object_file = object_dir.join(filename);
-            if !object_dir.exists() {
-                fs::create_dir(object_dir).expect("failed to create directory");
-            }
-            // compress using zlibencoder
-            let mut encoder =
-                flate2::write::ZlibEncoder::new(Vec::new(), flate2::Compression::default());
-            encoder.write_all(&data).expect("failed to compress");
-            let compressed_data = encoder.finish().expect("failed to finish compression");
-            fs::write(object_file, compressed_data).expect("failed to write file");
+            encode_and_save(&hex_result, data);
             io::stdout()
                 .write_all(&hex_result.as_bytes())
                 .expect("failed to write to stdout");
         }
     }
+}
+
+fn encode_and_save(hex_result: &String, data: Vec<u8>) {
+    let (dir, filename) = hex_result.split_at(2);
+    let object_dir = objects_dir().join(dir);
+    let object_file = object_dir.join(filename);
+    if !object_dir.exists() {
+        fs::create_dir(object_dir).expect("failed to create directory");
+    }
+    // compress using zlibencoder
+    let mut encoder = flate2::write::ZlibEncoder::new(Vec::new(), flate2::Compression::default());
+    encoder.write_all(&data).expect("failed to compress");
+    let compressed_data = encoder.finish().expect("failed to finish compression");
+    fs::write(object_file, compressed_data).expect("failed to write file");
 }
 
 fn source_dir() -> PathBuf {
@@ -111,6 +114,8 @@ fn source_dir() -> PathBuf {
 fn objects_dir() -> PathBuf {
     source_dir().join("objects")
 }
+
+#[allow(dead_code)]
 fn refs_dir() -> PathBuf {
     source_dir().join("refs")
 }
